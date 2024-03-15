@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storyteller</title>
+</head>
+<body>
+  <h1>Storyteller</h1>
+  <h2>Write or ask me about anything and I'll tell you a story about it</h2>
+  <form id="question-form">
+    <input type="text" id="question" name="question" required>
+    <button type="submit">Ask</button>
+  </form>
+  <div id="response"></div>
+
+  <script>
+    document.getElementById("question-form").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const question = document.getElementById("question").value;
+      const responseContainer = document.getElementById("response");
+      
+      try {
+        const response = await fetch("http://localhost:3000/ask", { // Cambiar la URL si es necesario
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ question })
+        });
+        
+        const responseData = await response.json();
+        const answer = responseData.answer;
+        responseContainer.innerHTML = `<p>${answer}</p>`;
+      } catch (error) {
+        console.error("Error:", error);
+        responseContainer.innerHTML = "<p>Something went wrong. Please try again later.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
